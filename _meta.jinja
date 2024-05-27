@@ -1,0 +1,41 @@
+{% if meta -%}
+{% set title = meta.title -%}
+{% set description = meta.description -%}
+{% else -%}
+{% set title = site.name -%}
+{% set description = site.description -%}
+{% endif -%}
+{% if meta and meta.image -%}
+{% set image = meta.image -%}
+{% elif site.social_image -%}
+{% set image = site.social_image -%}
+{% endif -%}
+<title>{{ title }}</title>
+<meta name="description" content="{{ description }}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{ title }}">
+<meta property="og:description" content="{{ description }}">
+<meta name="twitter:title" content="{{ title }}">
+<meta name="twitter:description" content="{{ description }}">
+{% if meta and meta.url -%}
+<meta property="og:url" content="{{ site.url ~ '/' ~ meta.url }}">
+<meta property="twitter:url" content="{{ site.url ~ '/' ~ meta.url }}">
+{% endif -%}
+{% if image -%}
+{% if site.cdn and image is startingwith("/static") -%}
+{% set image_url = site.cdn -%}
+{% set image = image | trim_start_matches("/static") -%}
+{% else -%}
+{% set image_url = site.url -%}
+{% endif -%}
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="{{ image_url ~ image }}">
+<meta name="twitter:image" content="{{ image_url ~ image }}">
+{% endif -%}
+{% if page_type and page_type == "article" -%}
+{% if canonical_url -%}
+<link rel="canonical" href="{{ canonical_url }}">
+{% else -%}
+<link rel="canonical" href="{{ site.url ~ '/' ~ meta.url }}">
+{% endif -%}
+{% endif -%}
