@@ -1,0 +1,42 @@
+{% macro author_link(author) -%}
+{% if author is sequence -%}
+{% set author_ids = author -%}
+{% else -%}
+{% set author_ids = [author] -%}
+{% endif -%}
+<div class="flex items-center">
+    {% for author_id in author_ids -%}
+    {% set author = get_author(author_id) -%}
+    {% if author -%}
+    <a class="inline-flex items-center px-2 py-1 !text-gray-500 rounded hover:bg-gray-200 hover:!no-underline"
+        href="/@{{ author.id | lower }}">
+        <img class="!m-0 !p-1 w-7 h-7 rounded-full object-cover" src="{{ author.avatar }}" alt="avatar" loading="lazy">
+        <span>
+            {% if author.name -%}
+            {{ author.name }}
+            {% else -%}
+            {{ author.id }}
+            {% endif -%}
+        </span>
+    </a>
+    {% else -%}
+    <span>{{ author_id }}</span>
+    {% endif -%}
+    {% endfor -%}
+</div>
+{% endmacro -%}
+
+{% macro issue_diamond(title, date) -%}
+<div class="mx-auto inline-block">
+    <span
+        class="zine-diamond text-2xl before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-primary relative block">
+        <div class="first-letter:text-4xl first-letter:font-bold relative text-main px-14">{{ title }}</div>
+    </span>
+    {% if date -%}
+    <span
+        class="zine-diamond before:block before:absolute before:-inset-1 before:-skew-y-3 before:bg-main relative block mt-2">
+        <div class="relative text-xs text-white">{{ date }}</div>
+    </span>
+    {% endif -%}
+</div>
+{% endmacro -%}
