@@ -1,8 +1,8 @@
 [package]
 name = "zine"
 version = "0.16.0"
-description = "A simple and opinionated tool to build your own magazine."
-authors = ["Folyd"]
+description = "music,hobbies, escape"
+authors = ["Lindsay Rabon"]
 homepage = "https://github.com/zineland/zine"
 repository = "https://github.com/zineland/zine"
 license = "Apache-2.0"
