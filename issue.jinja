@@ -1,0 +1,51 @@
+{% extends "base.jinja" -%}
+{% import "_macros.jinja" as macros -%}
+{% block content -%}
+<div class="p-4 md:p-8 mx-4 my-6 bg-white shadow-xl shadow-slate-700/10 ring-1 ring-gray-900/5">
+    <div class="text-center my-16">
+    {{ macros.issue_diamond(title=issue.title, date=issue.pub_date) }}
+    </div>
+    <div class="max-w-prose mx-auto">
+        {% if intro -%}
+        {% if site.edit_url -%}
+        <a class="absolute top-5 right-10 p-2 rounded hover:bg-gray-200"
+            href="{{ site.edit_url }}/content/{{ issue.dir }}/intro.md">
+            <img src="/static/edit.svg" alt="edit">
+        </a>
+        {% endif -%}
+        <div class="prose my-8 md:mx-8">{{ markdown_to_html(intro) | safe }}</div>
+        {% endif -%}
+        {% for article in articles -%}
+        <div class="relative pt-6 pb-4 sm:px-8 transition ease-in-out sm:hover:scale-110 duration-500 border-gray-200">
+            {% if article.path -%}
+            <a class="group" href="{{ article.path }}">
+            {% else -%}
+            <a class="group" href="/{{ issue.slug }}/{{ article.slug }}">
+            {% endif -%}
+                <div class="zine-cover relative">
+                    <span class="absolute top-4 right-4 text-white text-2xl font-bold"
+                        style="color: #eee; text-shadow: 1px 1px 2px #000">
+                        No. {{ loop.index }}
+                    </span>
+                    <img class="z-0 w-full max-h-52 md:max-h-72 object-cover" loading="lazy" src="{{ article.cover }}"
+                        alt="{{ article.title }}" />
+                </div>
+                <div class="mt-4 text-2xl text-black">
+                    <div
+                        class="zine-card-title mb-2 font-bold line-clamp-2 group-hover:underline decoration-8 underline-offset-1 decoration-primary">
+                        {{ article.title }}
+                    </div>
+                </div>
+            </a>
+            <div class="flex items-center justify-between text-base text-gray-500">
+                <span class="zine-card-date">{{ article.pub_date }}</span>
+                {{ macros.author_link(article.author) }}
+            </div>
+        </div>
+        {% if not loop.last -%}
+        <hr>
+        {% endif -%}
+        {% endfor -%}
+    </div>
+</div>
+{% endblock content -%}
