@@ -1,0 +1,135 @@
+{% extends "base.jinja" -%}
+{% import "_macros.jinja" as macros -%}
+{% block content -%}
+<div class="px-4 pb-10 md:px-8 md:pb-14 mx-4 my-6 bg-white shadow-xl shadow-slate-700/10 ring-1 ring-gray-900/5">
+    <div
+        class="sticky z-10 py-4 top-32 lg:top-36 xl:top-44 2xl:top-56 bg-white border-dashed border-b border-slate-300">
+        <div class="ml-1 md:ml-2 flex justify-between items-center">
+            <div class="zine-breadcrumb">
+                <a class="zine-diamond before:block before:absolute before:-inset-1 before:-skew-x-6 before:bg-primary relative inline-block transition sm:hover:scale-110 duration-500"
+                    href="/{{ issue.slug }}">
+                    <div class="relative text-main px-4">{{ issue.title }}</div>
+                </a>
+                <span class="ml-2 text-gray-700">/ {{ fluent("article-number", number) }}</span>
+            </div>
+            <div>
+                {% set common_style = "py-1 my-1 rounded hover:bg-gray-100" -%}
+                <div class="flex items-center">
+                    {% if i18n -%}
+                    <div id="i18n-menu" class="ml-1 md:ml-2 p-2 cursor-pointer rounded hover:bg-gray-200">
+                       <img src="/static/i18n.svg" alt="translation">
+                    </div>
+                    {% endif -%}
+                    {% if site.edit_url -%}
+                    <a class="ml-1 md:ml-2 p-2 rounded hover:bg-gray-200"
+                       href="{{ site.edit_url }}/content/{{ issue.dir }}/{{ article.file }}">
+                        <img src="/static/edit.svg" alt="edit">
+                    </a>
+                    {% endif -%}
+                    {% if toc -%}
+                    <div id="toc-menu" class="ml-1 md:ml-2 p-2 cursor-pointer rounded hover:bg-gray-200">
+                       <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"
+                            data-view-component="true">
+                            <path fill-rule="evenodd"
+                                d="M2 4a1 1 0 100-2 1 1 0 000 2zm3.75-1.5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zM3 8a1 1 0 11-2 0 1 1 0 012 0zm-1 6a1 1 0 100-2 1 1 0 000 2z">
+                            </path>
+                        </svg>
+                    </div>
+                    {% endif -%}
+                </div>
+                {% if i18n -%}
+                <div id="i18n-list"
+                    class="absolute hidden right-5 px-2 flex flex-col py-2 my-4 border bg-white rounded z-[99999] shadow-xl">
+                    {% for translation in i18n -%}
+                    {% if translation.path -%}
+                    <a class="{{ common_style }} px-8" href="{{ translation.path }}">
+                        {% else -%}
+                        <a class="{{ common_style }} px-8" href="/{{ issue.slug }}/{{ translation.slug }}">
+                            {% endif -%}
+                            {{ translation.name }}
+                        </a>
+                        {% endfor -%}
+                </div>
+                {% endif -%}
+                {% if toc -%}
+                <div id="toc-list"
+                    class="absolute hidden right-0 flex flex-col max-w-screen-sm max-h-96 w-60 py-2 my-4 border bg-white rounded z-[99999] shadow-xl">
+                    <div class="px-2 overflow-y-auto">
+                        {% for item in toc -%}
+                        <a href="#{{ item.id }}">
+                            {% if item.depth == 1 -%}
+                            {% set variant_style = "pl-2 text-gray-800 font-bold text-sm" -%}
+                            {% elif item.depth == 2 -%}
+                            {% set variant_style = "pl-4 text-gray-700 text-sm" -%}
+                            {% elif item.depth == 3 -%}
+                            {% set variant_style = "pl-6 text-gray-600 text-xs" -%}
+                            {% endif -%}
+                            {% if variant_style -%}
+                            <div class="{{ common_style }} {{ variant_style }}">{{ item.title }}</div>
+                            {% endif -%}
+                        </a>
+                        {% endfor -%}
+                    </div>
+                </div>
+                {% endif -%}
+            </div>
+        </div>
+    </div>
+    <div class="pt-10">
+        <div class="prose mx-auto">
+            <div class="zine-article-title text-2xl md:text-4xl font-extrabold leading-tight mb-8 text-center">
+                {{ article.title }}
+            </div>
+            <div class="flex items-center justify-between text-gray-500">
+                <span>{{ article.pub_date }}</span>
+                {{ macros.author_link(article.author) }}
+            </div>
+            {% if article.topics -%}
+            <div class="zine-topic bg-secondary my-2 py-2 px-2 text-center">
+                {% for topic in article.topics %}
+                    <a class="p-2 !text-main" href="/topic/{{ topic }}">#{{ topic }}</a>
+                {% endfor %}
+            </div>
+            {% endif -%}
+        </div>
+        <article class="prose mx-auto my-12">
+            {{ html | safe }}
+        </article>
+        {% if siblings[0] or siblings[1] -%}
+        <div class="my-4 w-full border-dashed border-t border-slate-300"></div>
+        <div class="zine-navigate flex flex-col md:flex-row md:justify-between">
+            {% for article in siblings -%}
+            {% if article -%}
+
+            {% if article.path -%}
+            {% set href = article.path -%}
+            {% else -%}
+            {% set href = "/" ~ issue.slug ~ "/" ~ article.slug -%}
+            {% endif -%}
+            <a class="inline my-1 py-2 px-4 font-bold text-slate-700 hover:underline" href="{{ href }}">
+                {% if loop.index0 == 0 -%}
+                {{ fluent("previous") }}
+                {% else -%}
+                {{ fluent("next") }}
+                {% endif -%}
+                {{ article.title }}
+            </a>
+            {% endif -%}
+            {% endfor -%}
+        </div>
+        {% endif -%}
+    </div>
+</div>
+<div
+    class="inline-link-card absolute hidden border rounded bg-white shadow-xl mx-2 w-96 transition ease-in-out sm:hover:scale-105 duration-500">
+    <a class="inline-link-url">
+        <div class="">
+            <img class="inline-link-image w-full h-52 object-cover rounded-t">
+            <div class="inline-link-title font-bold p-4 line-clamp-2"></div>
+        </div>
+    </a>
+</div>
+{% if theme.article_extend_template -%}
+{% include "article_extend_template.jinja" -%}
+{% endif -%}
+{% endblock content -%}
