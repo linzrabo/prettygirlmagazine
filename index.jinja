@@ -1,0 +1,42 @@
+{% extends "base.jinja" -%}
+{% import "_macros.jinja" as macros -%}
+{% block content -%}
+{% for issue in issues | reverse -%}
+<div class="p-4 md:p-8 mx-4 my-6 bg-white shadow-xl shadow-slate-700/10 ring-1 ring-gray-900/5">
+    <div class="text-center m-8">
+        <a href="/{{ issue.slug }}">
+            <div class="transition sm:hover:scale-110 duration-500">
+            {{ macros.issue_diamond(title=issue.title, date=issue.pub_date) }}
+            </div>
+        </a>
+    </div>
+    <div class="flex flex-wrap flex-col sm:flex-row sm:justify-evenly items-center">
+        {% for article in issue | attr("articles") -%}
+        <div
+            class="zine-card mt-8 sm:mx-2 sm:max-w-md w-full transition ease-in-out sm:hover:scale-105 duration-500 hover:border border-gray-200">
+            {% if article.path -%}
+            <a href="{{ article.path }}">
+            {% else -%}
+            <a href="/{{ issue.slug }}/{{ article.slug }}">
+            {% endif -%}
+                <div class="zine-cover relative mx-auto ">
+                    <img class="z-0 w-full max-h-52 md:max-h-56 object-cover" loading="lazy"
+                        src="{{ article.cover }}" alt="{{ article.title }}" />
+                </div>
+                <div class="m-3 text-xl text-black ">
+                    <div class="zine-card-title font-bold line-clamp-2">{{ article.title }}</div>
+                    <div class="zine-card-date mt-2 text-base text-gray-500">{{ article.pub_date }}</div>
+                </div>
+            </a>
+        </div>
+        {% endfor -%}
+        <div class="zine-button mt-8 sm:mx-2 flex w-full mx-auto">
+            <a href="/{{ issue.slug }}"
+                class="p-3 px-12 mx-auto my-8 bg-primary text-main text-sm font-bold rounded transition sm:hover:scale-110 duration-500">
+                {{ fluent("view-more") }}
+            </a>
+        </div>
+    </div>
+</div>
+{% endfor -%}
+{% endblock content -%}
