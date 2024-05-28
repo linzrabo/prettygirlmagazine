@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.author-code {
+    padding: 2px;
+    margin: 0 2px;
+    @apply inline rounded;
+    @apply text-gray-500 !important;
+}
+
+.author-code:hover {
+    @apply bg-gray-200 no-underline !important;
+}
+
+.author-code>img {
+    margin: 0 !important;
+    margin-left: 2px !important;
+    @apply inline w-4 h-4 align-middle rounded-full object-cover;
+}
+
+.author-code>span{
+    vertical-align: middle;
+}
+
+.url-preview {
+    outline: #dee0e3 1px solid;
+    padding: 1rem 1.25rem;
+    background-color: #f5f6f7;
+}
+
+.url-preview>div:nth-child(1) {
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.url-preview>div:nth-child(2) {
+    color: #6b7078;
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+}
+
+.url-preview>a {
+    font-size: 0.8rem;
+    overflow: hidden;
+    display: block;
+}
+
+.url-preview>img {
+    margin-top: 1rem;
+    margin-bottom: 0;
+}
+
+.url-preview:hover {
+    outline: #dee0e3 2px solid;
+    cursor: pointer;
+}
+
+.prose p>img:hover {
+    outline: #dee0e3 2px solid;
+    cursor: zoom-out;
+}
+
+.callout {
+    padding: 0 20px;
+    margin: 20px 0;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.inline-link {
+    padding: 2px;
+    @apply inline rounded;
+    @apply font-bold text-black !important;
+    @apply underline decoration-primary !important;
+}
+
+.inline-link:hover {
+    @apply text-link !important;
+}
+
+/* auto center page's h1 heading */
+.zine-page>h1 {
+    display: flex;
+    justify-content: center;
+}
+
+.toc-active {
+    @apply text-main bg-primary !important;
+}
